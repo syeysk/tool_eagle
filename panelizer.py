@@ -194,9 +194,9 @@ class Panelizer(_Panelizer):
     def rename_all(self, fkey):
         self._rename_all(self.docs[fkey]['root'])
 
-pan = Panelizer({'tr': '../Termo-Relay/Termo-Relay.brd',
-                 'wfr-bt139':'../WIFI-Relay-bt139/main.brd',
-                 'wfr':'../WIFI-Relay_v0.2/WIFI-Relay_v0.2.brd'})
+pan = Panelizer({'tr': '../../../eagle/Termo-Relay/Termo-Relay.brd',
+                 'wfr-bt139':'../../../eagle/WIFI-Relay-bt139/main.brd',
+                 'wfr':'../../../eagle/WIFI-Relay_v0.2/WIFI-Relay_v0.2.brd'})
 
 if __name__ == '__main__':
 
@@ -216,7 +216,7 @@ if __name__ == '__main__':
 
     pan.rename_all('wfr-bt139')
 
-    pan.write('wfr-bt139', '../Termo-Relay2.brd')
+    pan.write('wfr-bt139', '../../../eagle/panelizing/main.brd')
 
 ''' example of *.brd
 
