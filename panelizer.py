@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+import re
 
 class _Panelizer():
     def __init__(self):
@@ -127,10 +128,28 @@ class _Panelizer():
         elements = [];'''
         
     def _rename_all(self, root):
-        map = {}
+
+        name_map = {}
+        name_max = {}
+        
+        # rename the elements
+
         for element in root.findall("./drawing/board/elements/*"):
             name = element.get('name')
-            
+            prefix, index = re.sub(r"^([a-zA-Z_]+)([0-9]+)", r"\1 \2", name).split()
+
+            if prefix not in name_max.keys(): name_max[prefix] = 1
+            new_name = prefix + str(name_max[prefix])
+            element.set('name', new_name)
+            name_map[name] = new_name
+            name_max[prefix] += 1
+            #print(name, new_name)
+                
+                
+        # rename the references to the elements
+       
+        for ref in root.findall("./drawing/board/signals/signal/contactref"):
+            ref.set('element', name_map[ref.get('element')])
 
 class Panelizer(_Panelizer):
 
