@@ -33,11 +33,13 @@ class _Panelizer():
                 if 'y2' in child.keys(): child.set('y2', str(float(child.get('y2')) + into['y']))
 
             if len(el) > 0: self._move(child, into, level+1)
-            
+
+    def is_lib_exists(self, root, libname, packname=None):
+        xpath = "./drawing/board/libraries/library[@name='"+libname+"']"
+        if packname is not None: xpath += "/packages/package[@name='"+packname+"']"
+        return root.findall(xpath)
+
     def _join(self, board, board_to, into):
-        
-        #board.findall('./drawing')[0].append(board.findall('./drawing/board')[0])
-        #return
         
         # signals
 
@@ -63,25 +65,24 @@ class _Panelizer():
         libraries_to = board_to.findall('./drawing/board/libraries')[0]
         
         for library in board.findall('./drawing/board/libraries/*'):
-            is_append = board_to.findall("./drawing/board/libraries/library[@name='"+library.get('name')+"']")
-            if is_append: # библиотека уже есть в месте назначения. Проверим наличие корпуса в ней
-                packages_to = is_append[0].findall("./packages")[0]
+            library_to = self.is_lib_exists(board_to, library.get('name'))
+            if library_to:
+                packages_to = library_to[0].findall("./packages")[0]
                 for package in library.findall('./packages/*'):
-                    _is_append = is_append[0].findall("./packages/package[@name='"+package.get('name')+"']")
-                    if _is_append: continue
+                    if self.is_lib_exists(board_to, library.get('name'), package.get('name')): continue
                     packages_to.append(package)
                 continue
             libraries_to.append(library)
 
-    def _get_board_bound(self, board):
+    def _get_board_bound(self, root):
         x = []
         y = []
-        for wire in board.findall("./drawing/board/plain/wire[@layer='20']"):
+        for wire in root.findall("./drawing/board/plain/wire[@layer='20']"):
             for name in ['x1', 'x2']: x.append(float(wire.get(name)))
             for name in ['y1', 'y2']: y.append(float(wire.get(name)))
         return { 'x1': min(x), 'y1': min(y), 'x2': max(x), 'y2': max(y) }
          
-    def _get_max_names(self, board):
+    def _get_max_names(self, root):
         elements = [];
 
 class Panelizer(_Panelizer):
@@ -124,7 +125,7 @@ for fkey in pan.docs:
 pan.move('tr', {'x': 10, 'y': 50})
 pan.join('wfr', 'tr', {'x':0, 'y':0})
 
-pan.write('tr', 'Termo-Relay2.brd')
+pan.write('tr', '../Termo-Relay2.brd')
 
 
 '''
