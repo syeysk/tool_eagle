@@ -1,3 +1,8 @@
+'''
+Panelizer for EagleCad printed circuit boards
+
+'''
+
 import xml.etree.ElementTree as ET
 import re
 
@@ -193,26 +198,27 @@ pan = Panelizer({'tr': '../Termo-Relay/Termo-Relay.brd',
                  'wfr-bt139':'../WIFI-Relay-bt139/main.brd',
                  'wfr':'../WIFI-Relay_v0.2/WIFI-Relay_v0.2.brd'})
 
-for fkey in pan.docs:
-    c = pan.get_board_bound(fkey)
-    print(fkey+':', str(c['x1'])+' '+str(c['y1']), ';', str(c['x2'])+' '+str(c['y2']))
+if __name__ == '__main__':
 
-tr_c = pan.get_board_bound('tr')
-wfr_bt_c = pan.get_board_bound('wfr-bt139')
+    for fkey in pan.docs:
+        c = pan.get_board_bound(fkey)
+        print(fkey+':', str(c['x1'])+' '+str(c['y1']), ';', str(c['x2'])+' '+str(c['y2']))
 
-#pan.move('tr', {'x': 10, 'y': 50})
-pan.join('wfr', 'tr', {'x':tr_c['x2']+2, 'y':tr_c['y1']})
-pan.join('tr', 'wfr-bt139', {'x':wfr_bt_c['x1'], 'y':wfr_bt_c['y2']+1})
+    tr_c = pan.get_board_bound('tr')
+    wfr_bt_c = pan.get_board_bound('wfr-bt139')
 
-#wfr_bt_c = pan.get_fact_board_bound('wfr-bt139')
-pan.set_board_bound('wfr-bt139', {'x1':0, 'y1':0, 'x2':100, 'y2':100})#wfr_bt_c)
+    #pan.move('tr', {'x': 10, 'y': 50})
+    pan.join('wfr', 'tr', {'x':tr_c['x2']+2, 'y':tr_c['y1']})
+    pan.join('tr', 'wfr-bt139', {'x':wfr_bt_c['x1'], 'y':wfr_bt_c['y2']+1})
 
-pan.rename_all('wfr-bt139')
+    #wfr_bt_c = pan.get_fact_board_bound('wfr-bt139')
+    pan.set_board_bound('wfr-bt139', {'x1':0, 'y1':0, 'x2':100, 'y2':100})#wfr_bt_c)
 
-pan.write('wfr-bt139', '../Termo-Relay2.brd')
+    pan.rename_all('wfr-bt139')
 
+    pan.write('wfr-bt139', '../Termo-Relay2.brd')
 
-'''
+''' example of *.brd
 
  eagle
    drawing
